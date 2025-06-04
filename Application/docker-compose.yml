@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  web:
+    image: arfath29/yii2-app:latest
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8000:80"
+    environment:
+      - YII_ENV=production
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    networks:
+      - yii2-network
+
+networks:
+  yii2-network:
+    driver: overlay

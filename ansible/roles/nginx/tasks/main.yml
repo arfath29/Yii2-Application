@@ -1,0 +1,33 @@
+---
+- name: Install NGINX
+  apt:
+    name: nginx
+    state: present
+
+- name: Deploy NGINX config
+  template:
+    src: yii2.conf.j2
+    dest: /etc/nginx/sites-available/yii2.conf
+  notify:
+    - restart nginx
+
+- name: Enable NGINX site
+  file:
+    src: /etc/nginx/sites-available/yii2.conf
+    dest: /etc/nginx/sites-enabled/yii2.conf
+    state: link
+  notify:
+    - restart nginx
+
+- name: Remove default NGINX site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify:
+    - restart nginx
+
+- name: Ensure www-data user is in docker group (for socket access)
+  user:
+    name: www-data
+    groups: docker
+    append: yes

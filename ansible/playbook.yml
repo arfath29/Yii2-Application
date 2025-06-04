@@ -1,0 +1,24 @@
+---
+- name: Configure common system packages
+  hosts: all
+  become: yes
+  roles:
+    - common
+
+- name: Install and configure Docker
+  hosts: all
+  become: yes
+  roles:
+    - docker
+
+- name: Initialize Docker Swarm
+  hosts: manager
+  become: yes
+  roles:
+    - swarm
+
+- name: Install and configure NGINX 
+  hosts: all
+  become: yes
+  roles:
+    - nginx

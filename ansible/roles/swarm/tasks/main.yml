@@ -1,0 +1,16 @@
+---
+- name: Initialize Docker Swarm
+  command: docker swarm init --advertise-addr "{{ ansible_default_ipv4.address }}"
+  register: swarm_result
+  changed_when: "'This node is already a swarm manager' not in swarm_result.stderr"
+  ignore_errors: yes
+
+- name: Store swarm join token
+  command: docker swarm join-token -q worker
+  register: swarm_worker_token
+  changed_when: false
+
+- name: Store swarm manager token
+  command: docker swarm join-token -q manager
+  register: swarm_manager_token
+  changed_when: false

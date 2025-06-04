@@ -1,0 +1,39 @@
+name: Deploy Yii2 App to Docker Swarm
+
+on:
+  # push:
+  #   branches: [ main ]
+  workflow_dispatch:
+
+env:
+  DOCKER_IMAGE: arfath29/yii2-app
+  DOCKER_TAG: latest
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+    - name: Build and push Docker image
+      run: |
+        docker build -t $DOCKER_IMAGE:$DOCKER_TAG -f docker/Dockerfile .
+        docker push $DOCKER_IMAGE:$DOCKER_TAG
+
+    - name: Install SSH key
+      uses: webfactory/ssh-agent@v0.5.0
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Deploy to server
+      run: |
+        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} \
+          "docker service update --image $DOCKER_IMAGE:$DOCKER_TAG yii2_web"
