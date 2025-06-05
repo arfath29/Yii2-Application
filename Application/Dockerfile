@@ -37,7 +37,7 @@ WORKDIR /var/www/html
 
 # Install Yii2 dependencies
 RUN composer update 
-RUN composer install --no-interaction --prefer-dist
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 RUN composer install --no-dev --optimize-autoloader
 
 # Enable Apache rewrite module
