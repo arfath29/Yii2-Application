@@ -30,7 +30,7 @@ RUN echo '<Directory /var/www/html/web>\n    AllowOverride All\n</Directory>' >>
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Copy application files
-COPY src/ /var/www/html/
+COPY . /var/www/html/
 
 # Set working directory
 WORKDIR /var/www/html
