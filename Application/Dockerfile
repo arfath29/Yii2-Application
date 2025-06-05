@@ -34,7 +34,7 @@ COPY --from=composer:2.2 /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 # Copy application files
-COPY . /var/www/html/
+COPY src/ /var/www/html/
 
 # Install Yii2 dependencies (only once)
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
