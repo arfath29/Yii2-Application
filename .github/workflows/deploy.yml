@@ -25,7 +25,7 @@ jobs:
 
     - name: Build and push Docker image
       run: |
-        docker build -t $DOCKER_IMAGE:$DOCKER_TAG -f Dockerfile .
+        docker build -t $DOCKER_IMAGE:$DOCKER_TAG -f .
         docker push $DOCKER_IMAGE:$DOCKER_TAG
 
     - name: Install SSH key
